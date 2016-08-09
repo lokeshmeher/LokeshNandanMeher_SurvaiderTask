@@ -1,2 +1,5 @@
 # survaider-task-2
-Repo for second task.
+Repository for second task.
+
+**Steps**
+- Initialize database by running `flask initdb`.
