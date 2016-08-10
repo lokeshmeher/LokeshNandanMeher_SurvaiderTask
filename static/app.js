@@ -1,8 +1,9 @@
 'use strict';
 
 (function() {
-	app = angular.module('some-module', []);
-	app.controller('some-controller', function() {
-		;
-	});
+	app = angular.module('hotels', []);
+
+	app.controller('childUnitsController', ['$scope', function($scope) {
+		
+	}]);
 })();

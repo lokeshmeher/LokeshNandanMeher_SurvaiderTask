@@ -8,5 +8,6 @@
 		{% block body %}{% endblock %}
 		<script src="{{ url_for('static', filename='angular.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='app.js') }}"></script>
+		{% block javascript %}{% endblock %}
 	</body>
 </html>

@@ -9,6 +9,7 @@ app.config['MONGO_DBNAME'] = 'appdb_free_2'
 app.config['MONGO_URI'] = 'mongodb://lokesh:pa$$w0rd123@ds023634.mlab.com:23634/appdb_free_2'
 mongo = PyMongo(app)
 
+
 # Run only once.
 @app.cli.command('initdb')
 def command_initdb():
@@ -23,16 +24,52 @@ def command_initdb():
 		reviews_collection.insert_many(reviews_data)
 	print('Initialized database.')
 
+
 @app.route('/')
 def home():
 	reviews = mongo.db.reviews
-	cursor = reviews.aggregate([
-		{'$group': {'_id': '$sentiment', 'count': {'$sum': 1}}}
-	])
+	cursor = reviews.aggregate(
+		[
+			{'$group': {'_id': '$sentiment', 'count': {'$sum': 1}}}
+		]
+	)
 	sentiments = [doc for doc in cursor]
 	context = {}
 	total_reviews = sum([sentiment['count'] for sentiment in sentiments])
 	for sentiment in sentiments:
 		# for e.g., {'positive': 62.05}. The value denotes percentage.
 		context[sentiment['_id'].lower()] = sentiment['count']/total_reviews * 100
+
+	relation = mongo.db.relation
+	cursor = relation.find()	# Since only one hotel chain is present
+	context['units'] = cursor[0]['units']
+
 	return render_template('home.html', **context)
+
+
+@app.route('/unit/<id>')
+def unit_details(id):
+	relation = mongo.db.relation
+	context = {}
+	for unit in relation.find()[0]['units']:
+		if unit['property_id'] == id:
+			context['unit_name'] = unit['name']
+			break
+	context['unit_id'] = id
+
+	reviews = mongo.db.reviews
+	cursor = reviews.aggregate(
+		[
+			{'$match': {'property_id': id}},
+			{'$group': {'_id': '$sentiment', 'count': {'$sum': 1}}},
+		]
+	)
+	sentiments = [doc for doc in cursor]
+	total_reviews = sum([sentiment['count'] for sentiment in sentiments])
+	for sentiment in sentiments:
+		context[sentiment['_id'].lower()] = sentiment['count']/total_reviews * 100
+
+	unit_reviews = reviews.find({'property_id': id})
+	context['unit_reviews'] = unit_reviews
+
+	return render_template('unit_details.html', **context)

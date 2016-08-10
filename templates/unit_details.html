@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<h1>Overall sentiments (percent)</h1>
+<h1>Sentiments (percent) for {{ unit_name }}</h1>
 <!-- Plotly chart will be drawn inside this DIV -->
 <div id="sentiment-chart" style="width: 480px; height: 400px;"></div>
 
-<h1>Units</h1>
-{% for unit in units %}
-	<a href="{{ url_for('unit_details', id=unit.property_id) }}">{{ unit.name }}</a>
+<h1>Reviews</h1>
+{% for rev in unit_reviews %}
+	<p>
+		Rating: {{ rev.rating }}<br>
+		{{ rev.review }}<br>
+		<a href="{{ rev.review_link }}">Link</a>
+	</p>
 {% endfor %}
 {% endblock %}
-
 
 {% block javascript %}
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
