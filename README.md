@@ -1,6 +1,3 @@
-# survaider-task-2
-Repository for second task.
-
 **Note:**
 The MongoDB database is hosted on the cloud.
 
