@@ -1,13 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="hotels">
 	<head>
 		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Understand customers</title>
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 	</head>
 	<body>
-		{% block body %}{% endblock %}
-		<script src="{{ url_for('static', filename='angular.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='app.js') }}"></script>
-		{% block javascript %}{% endblock %}
+		<div class="container">
+			{% block body %}
+			{% endblock %}
+		</div>
+
+		<script src="{{ url_for('static', filename='js/jquery-3.1.0.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/plotly.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+		<!-- Script for Graph -->
+		<script type="text/javascript">
+			var data = [
+				{
+					x: ['Positive', 'Negative', 'Neutral'],
+					y: [
+						{{ positive|round(precision=2) }},
+						{{ negative|round(precision=2) }},
+						{{ neutral|round(precision=2) }}
+					],
+					type: 'bar'
+				}
+			];
+			Plotly.newPlot('sentiment-chart', data);
+		</script>
+		{% block javascript %}
+		{% endblock %}
 	</body>
 </html>

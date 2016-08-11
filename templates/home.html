@@ -1,31 +1,15 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<h1>Overall sentiments (percent)</h1>
-<!-- Plotly chart will be drawn inside this DIV -->
-<div id="sentiment-chart" style="width: 480px; height: 400px;"></div>
+<div align="center">
+	<h1>Overall customer sentiments</h1>
+	<!-- Graph will be drawn inside this div -->
+	<div id="sentiment-chart" style="width: 480px; height: 400px;"></div>
 
-<h1>Units</h1>
-{% for unit in units %}
-	<a href="{{ url_for('unit_details', id=unit.property_id) }}">{{ unit.name }}</a>
-{% endfor %}
-{% endblock %}
-
-
-{% block javascript %}
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script type="text/javascript">
-	var data = [
-		{
-			x: ['Positive', 'Negative', 'Neutral'],
-			y: [
-				{{ positive|round(precision=2) }},
-				{{ negative|round(precision=2) }},
-				{{ neutral|round(precision=2) }}
-			],
-			type: 'bar'
-		}
-	];
-	Plotly.newPlot('sentiment-chart', data);
-</script>
+	<h1>Units</h1>
+	<br>
+	{% for unit in units %}
+		<a class="btn btn-primary" href="{{ url_for('unit_details', id=unit.property_id) }}">{{ unit.name }}</a>
+	{% endfor %}
+</div>
 {% endblock %}

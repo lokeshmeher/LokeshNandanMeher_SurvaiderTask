@@ -1,34 +1,54 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<h1>Sentiments (percent) for {{ unit_name }}</h1>
-<!-- Plotly chart will be drawn inside this DIV -->
-<div id="sentiment-chart" style="width: 480px; height: 400px;"></div>
+<div align="center">
+	<h1>Customer sentiments for {{ unit_name }}</h1>
+	<!-- Graph will be drawn inside this div -->
+	<div id="sentiment-chart" style="width: 480px; height: 400px;"></div>
 
-<h1>Reviews</h1>
-{% for rev in unit_reviews %}
+	<h1>Reviews</h1>
+	<div ng-controller="ReviewsController" ng-init="hotelId = '{{ unit_id }}'">
+		<div class="col-sm-10 col-sm-offset-1" style="position:relative">
+			<span ng-show="isLoading" id="loading" class="btn btn-success">Loading...</span>
+			<div infscroll="getMoreReviews()" style="height:400px; overflow:auto;">
+				<table class="table table-responsive table-striped">
+				<table>
+					<thead>
+						<th>Rating</th>
+						<th>Review</th>
+						<th>Link</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="rev in reviewList">
+							{% raw %}
+							<td style="padding:15px"><strong>{{ rev.rating | number:0 }} Stars</strong></td>
+							<td style="padding:15px">{{ rev.review | limitTo:300 }} ...</td>
+							<td style="padding:15px"><a class="btn btn-primary" href="{{ rev.review_link }}" target="_blank">Link</a></td>
+							<br>
+							{% endraw %}
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style type="text/css">
+#loading {
+	position: absolute;
+	left: 45%;
+	top: 45%;
+	display: block;
+	margin: 0 auto;
+}
+</style>
+
+{# {% for rev in unit_reviews %}
 	<p>
 		Rating: {{ rev.rating }}<br>
 		{{ rev.review }}<br>
 		<a href="{{ rev.review_link }}">Link</a>
 	</p>
-{% endfor %}
-{% endblock %}
-
-{% block javascript %}
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script type="text/javascript">
-	var data = [
-		{
-			x: ['Positive', 'Negative', 'Neutral'],
-			y: [
-				{{ positive|round(precision=2) }},
-				{{ negative|round(precision=2) }},
-				{{ neutral|round(precision=2) }}
-			],
-			type: 'bar'
-		}
-	];
-	Plotly.newPlot('sentiment-chart', data);
-</script>
+{% endfor %} #}
 {% endblock %}
