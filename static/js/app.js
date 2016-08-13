@@ -10,7 +10,6 @@ app.controller('ReviewsController', ['$scope', '$http', function($scope, $http) 
 
 	var getReviews = function() {
 		$scope.isLoading = true;
-		console.log('/api/get_reviews/' + $scope.hotelId + '/' + $scope.currentIndex + '/' + $scope.reviewsPerFetch);
 		$http({
 			method: 'GET',
 			url: '/api/get_reviews/' + $scope.hotelId + '/' + $scope.currentIndex + '/' + $scope.reviewsPerFetch,
